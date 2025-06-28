@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -20,21 +20,25 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useFormStore } from "@/store/formStore";
 
 const HotelCreatePage = () => {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
+  const { hotel, setHotel } = useFormStore();
 
   const handleAmenityChange = (label: string) => {
-    setSelectedAmenities((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
-        : [...prev, label]
-    );
-    console.log(selectedAmenities);
+    const updated = hotel.amenities.includes(label)
+      ? hotel.amenities.filter((item) => item !== label)
+      : [...hotel.amenities, label];
+    setHotel({ ...hotel, amenities: updated });
   };
+
+  const imageUrls = useMemo(() => {
+    return hotel.images.map((image) => URL.createObjectURL(image));
+  }, [hotel.images]);
 
   const amenities = [
     { label: "Free Wifi", icon: <Wifi className="w-4 h-4" /> },
@@ -62,8 +66,8 @@ const HotelCreatePage = () => {
         <Input
           className="mt-2 bg-black/20 border-gray-500 py-5"
           placeholder="Beach Hotel"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={hotel.title}
+          onChange={(e) => setHotel({ ...hotel, title: e.target.value })}
         />
       </div>
       <div>
@@ -72,8 +76,8 @@ const HotelCreatePage = () => {
         <Textarea
           className="mt-2 bg-black/20 border-gray-500 h-30"
           placeholder="Beach Hotel Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={hotel.description}
+          onChange={(e) => setHotel({ ...hotel, description: e.target.value })}
         />
       </div>
       <div>
@@ -89,7 +93,7 @@ const HotelCreatePage = () => {
                 name={amenity.label}
                 className="w-4 h-4"
                 onChange={() => handleAmenityChange(amenity.label)}
-                checked={selectedAmenities.includes(amenity.label)}
+                checked={hotel.amenities.includes(amenity.label)}
               />
               <label
                 className="flex items-center  gap-2"
@@ -105,21 +109,24 @@ const HotelCreatePage = () => {
       <div className="pb-10 mt-10   items-center justify-center ">
         <div
           className={`${
-            images.length > 0 ? "flex justify-between items-center " : ""
+            hotel.images.length > 0 ? "flex justify-between items-center " : ""
           }`}
         >
           <div>
             <h2 className="font-semibold text-xl">Hotel Images</h2>
             <p className="text-sm text-gray-400">Upload your Hotel Images</p>
           </div>
-          {images.length > 0 && (
+          {hotel.images.length > 0 && (
             <label htmlFor="images">
               <input
                 onChange={(e) =>
-                  setImages((prev) => [
-                    ...prev,
-                    ...Array.from(e.target.files || []),
-                  ])
+                  setHotel({
+                    ...hotel,
+                    images: [
+                      ...hotel.images,
+                      ...Array.from(e.target.files || []),
+                    ],
+                  })
                 }
                 type="file"
                 id="images"
@@ -133,13 +140,13 @@ const HotelCreatePage = () => {
             </label>
           )}
         </div>
-        {images.length > 0 ? (
+        {hotel.images.length > 0 ? (
           <div className="mx-auto grid grid-cols-2 items-center justify-center max-w-2xl gap-5  mt-10">
-            {images.map((image) => (
+            {hotel.images.map((image) => (
               <div key={image.name} className="relative group ">
                 <Image
                   className="object-cover border-2    hover:blur-xs cursor-pointer transition-all duration-300 border-gray-500 p-0.5 rounded-lg w-md h-[300px]   "
-                  src={URL.createObjectURL(image)}
+                  src={imageUrls[hotel.images.indexOf(image)]}
                   alt={image.name}
                   width={100}
                   height={100}
@@ -158,7 +165,12 @@ const HotelCreatePage = () => {
               className="flex justify-center items-center gap-2 w-full"
             >
               <input
-                onChange={(e) => setImages(Array.from(e.target.files || []))}
+                onChange={(e) =>
+                  setHotel({
+                    ...hotel,
+                    images: Array.from(e.target.files || []),
+                  })
+                }
                 type="file"
                 multiple
                 id="images"
