@@ -6,10 +6,51 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hotels    Hotel[]
+  
+}
+
+model Hotel {
+  id        String   @id @default(uuid())
+  name      String
+  description String
+  amenities   String[]
+  images      String[]
+  rooms       Room[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("hotels")
+}
+
+model Room {
+  id        String   @id @default(uuid())
+  name      String
+  facilities String[]
+  pictures   String[]
+  persons    String
+  price      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  hotelId     String
+  hotel       Hotel @relation(fields: [hotelId], references: [id])
 }

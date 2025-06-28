@@ -2,6 +2,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Input } from "@/components/ui/input";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const Header = () => {
   return (
@@ -15,7 +23,14 @@ const Header = () => {
         <Link href="/about">About</Link>
         <Link href="/contact">Contact</Link>
 
-        <Button variant={"secondary"}>Sign In</Button>
+        <SignedOut>
+          <Button>
+            <SignInButton />
+          </Button>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </div>
     </header>
   );

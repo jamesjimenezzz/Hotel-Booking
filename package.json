@@ -11,6 +11,8 @@
   "dependencies": {
     "@clerk/nextjs": "^6.23.0",
     "@hookform/resolvers": "^5.1.1",
+    "@neondatabase/serverless": "^1.0.1",
+    "@prisma/adapter-neon": "^6.10.1",
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.5",
@@ -23,6 +25,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.58.1",
     "tailwind-merge": "^3.3.1",
+    "ws": "^8.18.3",
     "zod": "^3.25.67",
     "zustand": "^5.0.6"
   },
@@ -32,6 +35,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/ws": "^8.18.1",
+    "bufferutil": "^4.0.9",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "prisma": "^6.10.1",
