@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Providers } from "@/components/Providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased `}>
-        <ClerkProvider>
-          <Header />
-          {children}
-        </ClerkProvider>
+        <Providers>
+          <ClerkProvider>
+            <Header />
+            {children}
+          </ClerkProvider>
+        </Providers>
       </body>
     </html>
   );

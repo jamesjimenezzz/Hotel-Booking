@@ -4,10 +4,14 @@ import HotelCreatePage from "./HotelCreatePage";
 import { Button } from "@/components/ui/button";
 import RoomCreatePage from "./RoomCreatePage";
 import { useFormStore } from "@/store/formStore";
+import { useCreateHotel } from "@/hooks/useCreateHotel";
 
 const MainCreatePage = () => {
   const [page, setPage] = useState(0);
   const [previous, setPrevious] = useState(false);
+  const { hotel, room, reset } = useFormStore.getState();
+
+  const { mutate, isPending } = useCreateHotel();
 
   const handleNext = () => {
     if (page < pages.length - 1) setPage(page + 1);
@@ -24,24 +28,18 @@ const MainCreatePage = () => {
   const PageComponent = pages[page];
 
   const handleSubmit = async () => {
-    const { hotel, room, reset } = useFormStore.getState();
-    try {
-      const res = await fetch("/api/hotel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hotel, room }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to create hotel");
+    mutate(
+      { hotel, room },
+      {
+        onSuccess: () => {
+          reset();
+          setPage(0);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
       }
-
-      const data = await res.json();
-      reset();
-      setPage(0);
-    } catch (err) {
-      console.error(err);
-    }
+    );
   };
 
   return (
@@ -72,8 +70,9 @@ const MainCreatePage = () => {
               variant={"outline"}
               onClick={() => handleSubmit()}
               className="px-6  cursor-pointer py-5"
+              disabled={isPending}
             >
-              Submit
+              {isPending ? "Submitting..." : "Submit"}
             </Button>
           </div>
         )}

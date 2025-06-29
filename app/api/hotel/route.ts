@@ -11,14 +11,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    console.log("User ensured in database");
-
     const { hotel, room } = await req.json();
-    console.log("hotel data:", hotel);
-    console.log("room data:", room);
-    console.log("hotel.images:", hotel.images);
-
-    // Ensure images is an array of strings
     let images = [];
     if (Array.isArray(hotel.images)) {
       images = hotel.images
@@ -27,7 +20,6 @@ export async function POST(req: NextRequest) {
     } else if (typeof hotel.images === "string") {
       images = [hotel.images];
     }
-
     const createdHotel = await prisma.hotel.create({
       data: {
         name: hotel.title,
