@@ -1,9 +1,14 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { WavesLadder } from "lucide-react";
+import { useEffect } from "react";
 
 export default function Page() {
+  useEffect(() => {
+    fetch("/api/sync-user");
+  }, []);
   return (
     <div className="max-w-7xl mx-auto py-4">
       <h1 className="text-4xl font-semibold text-center">BOOK YOUR HOTEL</h1>

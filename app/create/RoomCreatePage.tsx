@@ -68,6 +68,7 @@ const RoomCreatePage = () => {
             <input
               onChange={() => handleFacilityChange(facility.label)}
               type="checkbox"
+              id={facility.label}
               className="w-4 h-4"
               checked={room.facilities.includes(facility.label)}
             />

@@ -36,6 +36,13 @@ const HotelCreatePage = () => {
     setHotel({ ...hotel, amenities: updated });
   };
 
+  const handleDeleteImage = (index: number) => {
+    setHotel({
+      ...hotel,
+      images: hotel.images.filter((_, i) => i != index),
+    });
+  };
+
   const imageUrls = useMemo(() => {
     return hotel.images.map((image) => URL.createObjectURL(image));
   }, [hotel.images]);
@@ -90,6 +97,7 @@ const HotelCreatePage = () => {
             <div className="flex items-center  gap-2" key={amenity.label}>
               <input
                 type="checkbox"
+                id={amenity.label}
                 name={amenity.label}
                 className="w-4 h-4"
                 onChange={() => handleAmenityChange(amenity.label)}
@@ -142,7 +150,7 @@ const HotelCreatePage = () => {
         </div>
         {hotel.images.length > 0 ? (
           <div className="mx-auto grid grid-cols-2 items-center justify-center max-w-2xl gap-5  mt-10">
-            {hotel.images.map((image) => (
+            {hotel.images.map((image, index) => (
               <div key={image.name} className="relative group ">
                 <Image
                   className="object-cover border-2    hover:blur-xs cursor-pointer transition-all duration-300 border-gray-500 p-0.5 rounded-lg w-md h-[300px]   "
@@ -151,7 +159,10 @@ const HotelCreatePage = () => {
                   width={100}
                   height={100}
                 />
-                <div className="flex items-center bg-red-500 rounded-lg p-1 cursor-pointer gap-2 absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-all duration-300  z-10 ">
+                <div
+                  onClick={() => handleDeleteImage(index)}
+                  className="flex items-center bg-red-500 rounded-lg p-1 cursor-pointer gap-2 absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-all duration-300  z-10 "
+                >
                   <Trash className="w-5 h-5 text-gray-100 cursor-pointer rounded-full" />
                   <p className="text-sm text-gray-100">Delete</p>
                 </div>
