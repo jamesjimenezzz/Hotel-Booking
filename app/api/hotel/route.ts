@@ -47,20 +47,36 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const { userId } = await auth();
 
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "5");
+  const skip = (page - 1) * limit;
+
   try {
+    const total = await prisma.hotel.count();
     const hotels = await prisma.hotel.findMany({
+      skip,
+      take: limit,
       include: {
         rooms: true,
       },
     });
-    return NextResponse.json(hotels);
+    return NextResponse.json({
+      data: hotels,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error details:", error);
     return new Response("Internal Server Error", { status: 500 });

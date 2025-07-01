@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   Dumbbell,
@@ -27,16 +27,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useSearchParams } from "next/navigation";
+import SpinnerGlobal from "@/components/SpinnerGlobal";
 export default function Page() {
   useEffect(() => {
     fetch("/api/sync-user");
   }, []);
 
-  const { data: hotels, isPending } = useGetHotels();
-
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page") || 1);
+  const limit = 5;
+  const { data: hotels, isPending } = useGetHotels(page, limit);
+  const allPages = hotels?.pagination.totalPages;
   const amenitiesLogo = {
     "Free Wifi": <Wifi className="w-4 h-4" />,
     "Free Parking": <ParkingCircle className="w-4 h-4" />,
@@ -52,10 +67,14 @@ export default function Page() {
     "24/7 Security": <Shield className="w-4 h-4" />,
   };
 
+  if (isPending) {
+    return <SpinnerGlobal />;
+  }
+
   return (
     <div className="max-w-4xl mx-auto py-4">
       <h1 className="text-4xl font-semibold text-center">BOOK YOUR HOTEL</h1>
-      {hotels?.map((hotel: Hotel & { rooms: Room[] }) => (
+      {hotels?.data.map((hotel: Hotel & { rooms: Room[] }) => (
         <Card
           className="w-full p-0  outline-1  overflow-hidden my-8"
           key={hotel.id}
@@ -68,9 +87,16 @@ export default function Page() {
                 alt="hotel"
                 fill
               />
-              <Button className="absolute top-1 right-2">
+
+              <Button variant={"outline"} className="absolute top-1 right-2">
                 <Heart className="w-4 h-4" />
               </Button>
+              <Badge
+                variant={"secondary"}
+                className="absolute  bg-blue-500 text-white top-2 left-2"
+              >
+                Featured Hotel
+              </Badge>
             </div>
             <div className="flex-1 py-5">
               <CardContent className="flex flex-col gap-8">
@@ -120,6 +146,35 @@ export default function Page() {
           </div>
         </Card>
       ))}
+      <Pagination className="flex justify-center">
+        <PaginationContent>
+          {page > 1 && (
+            <>
+              <PaginationItem>
+                <PaginationPrevious href={`/?page=${page - 1}`} />
+              </PaginationItem>
+            </>
+          )}
+          {Array.from({ length: allPages }).map((_, index) => (
+            <PaginationItem key={index + 1}>
+              <PaginationLink
+                isActive={page === index + 1}
+                href={`/?page=${index + 1}`}
+                className={`${page === index + 1} ? `}
+              >
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {page > 1 && page < allPages && (
+            <>
+              <PaginationItem>
+                <PaginationNext href={`/?page=${page + 1}`} />
+              </PaginationItem>
+            </>
+          )}
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

@@ -14,9 +14,9 @@ export const createHotel = async (hotel: HotelData, room: RoomData) => {
   }
 };
 
-export const getHotels = async () => {
+export const getHotels = async (page: number, limit: number) => {
   try {
-    const res = await fetch("/api/hotel");
+    const res = await fetch(`/api/hotel?page=${page}&limit=${limit} `);
     if (!res.ok) {
       console.error("Failed to get hotels");
       return null;

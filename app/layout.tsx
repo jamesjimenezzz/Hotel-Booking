@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers } from "@/components/Providers";
+import SpinnerGlobal from "@/components/SpinnerGlobal";
 
 const poppins = Poppins({
   variable: "--font-poppins",

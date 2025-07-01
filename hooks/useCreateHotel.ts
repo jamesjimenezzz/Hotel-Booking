@@ -20,9 +20,9 @@ export const useCreateHotel = () => {
   });
 };
 
-export const useGetHotels = () => {
+export const useGetHotels = (page: number, limit: number) => {
   return useQuery({
-    queryKey: ["hotels"],
-    queryFn: getHotels,
+    queryKey: ["hotels", page, limit],
+    queryFn: () => getHotels(page, limit),
   });
 };
