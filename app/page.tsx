@@ -160,7 +160,11 @@ export default function Page() {
               <PaginationLink
                 isActive={page === index + 1}
                 href={`/?page=${index + 1}`}
-                className={`${page === index + 1} ? `}
+                className={`${
+                  page === index + 1
+                    ? "border-1 border-gray-300 bg-gray-100 "
+                    : ""
+                } `}
               >
                 {index + 1}
               </PaginationLink>
