@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import RoomCreatePage from "./RoomCreatePage";
 import { useFormStore } from "@/store/formStore";
 import { useCreateHotel } from "@/hooks/useCreateHotel";
+import { Spinner } from "@/components/Spinner";
 
 const MainCreatePage = () => {
   const [page, setPage] = useState(0);
   const [previous, setPrevious] = useState(false);
-  const { hotel, room, reset } = useFormStore.getState();
 
   const { mutate, isPending } = useCreateHotel();
 
@@ -28,6 +28,8 @@ const MainCreatePage = () => {
   const PageComponent = pages[page];
 
   const handleSubmit = async () => {
+    const { hotel, room, reset } = useFormStore.getState();
+
     mutate(
       { hotel, room },
       {

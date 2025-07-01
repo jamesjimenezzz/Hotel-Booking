@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
-interface HotelData {
-  title: string;
+export interface HotelData {
+  name: string;
   description: string;
   amenities: string[];
   images: File[];
 }
 
-interface RoomData {
-  title: string;
+export interface RoomData {
+  name: string;
   facilities: string[];
   persons: string;
   images: File[];
@@ -25,13 +25,13 @@ interface formStore {
 
 export const useFormStore = create<formStore>((set) => ({
   hotel: {
-    title: "",
+    name: "",
     description: "",
     amenities: [],
     images: [],
   },
   room: {
-    title: "",
+    name: "",
     facilities: [],
     persons: "",
     images: [],
@@ -42,13 +42,13 @@ export const useFormStore = create<formStore>((set) => ({
   reset: () =>
     set({
       hotel: {
-        title: "",
+        name: "",
         description: "",
         amenities: [],
         images: [],
       },
       room: {
-        title: "",
+        name: "",
         facilities: [],
         persons: "",
         images: [],

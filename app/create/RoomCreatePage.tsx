@@ -169,8 +169,14 @@ const RoomCreatePage = () => {
       <div className="flex items-center gap-2 ">
         <span className="text-lg">$</span>
         <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           className="border-0 border-b-2 w-[5rem] p-2 border-gray-300 focus:ring-0 focus:outline-none text-md "
-          onChange={(e) => setRoom({ ...room, price: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value.replace(/[^0-9]/g, "");
+            setRoom({ ...room, price: value });
+          }}
           value={room.price}
           placeholder="Price"
         />

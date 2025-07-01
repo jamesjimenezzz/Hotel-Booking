@@ -46,3 +46,23 @@ export async function POST(req: NextRequest) {
     return new Response("Internal Server Error", { status: 500 });
   }
 }
+
+export async function GET() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  try {
+    const hotels = await prisma.hotel.findMany({
+      include: {
+        rooms: true,
+      },
+    });
+    return NextResponse.json(hotels);
+  } catch (error) {
+    console.error("Error details:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}

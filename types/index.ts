@@ -1,12 +1,15 @@
 export interface Hotel {
-  title: string;
+  id: string;
+  name: string;
   description: string;
   amenities: string[];
   images: File[];
+  rooms: Room[];
 }
 
 export interface Room {
-  title: string;
+  id: string;
+  name: string;
   facilities: string[];
   persons: string;
   images: File[];
