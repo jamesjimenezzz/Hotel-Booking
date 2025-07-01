@@ -1,4 +1,4 @@
-import { createHotel, getHotels } from "@/app/api/createHotel";
+import { createHotel, getHotels, getHotelById } from "@/app/api/createHotel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { HotelData, RoomData } from "@/store/formStore";
 
@@ -24,5 +24,12 @@ export const useGetHotels = (page: number, limit: number) => {
   return useQuery({
     queryKey: ["hotels", page, limit],
     queryFn: () => getHotels(page, limit),
+  });
+};
+
+export const useGetHotelById = (hotelId: string) => {
+  return useQuery({
+    queryKey: ["hotel", hotelId],
+    queryFn: () => getHotelById(hotelId),
   });
 };

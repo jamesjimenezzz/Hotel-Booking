@@ -28,3 +28,18 @@ export const getHotels = async (page: number, limit: number) => {
     return null;
   }
 };
+
+export const getHotelById = async (hotelId: string) => {
+  try {
+    const res = await fetch(`/api/hotel/${hotelId}`);
+    if (!res.ok) {
+      console.error("Failed to get hotel by id");
+      return null;
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to get hotel by id");
+    return null;
+  }
+};
