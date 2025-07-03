@@ -3,16 +3,249 @@ import React from "react";
 import { useParams } from "next/navigation";
 import { useGetHotelById } from "@/hooks/useCreateHotel";
 import SpinnerGlobal from "@/components/SpinnerGlobal";
-
+import Image from "next/image";
+import hotelImage from "@/public/hotel-image.jpg";
+import {
+  Wifi,
+  ParkingCircle,
+  Utensils,
+  Soup,
+  Salad,
+  Waves,
+  Dumbbell,
+  Bubbles,
+  Martini,
+  Bell,
+  Shield,
+  Fan,
+  Plug,
+  Car,
+  Computer,
+  Sofa,
+  Bed,
+  Umbrella,
+  ChevronDownIcon,
+} from "lucide-react";
+import { Room } from "@prisma/client";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { DateRange } from "react-day-picker";
 const HotelDescription = () => {
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
+  });
+  const [open, setOpen] = React.useState(false);
+
   const { hotelId } = useParams();
   const { data: hotel, isPending } = useGetHotelById(hotelId as string);
+  const amenitiesLogo = {
+    "Free Wifi": <Wifi className="w-4 h-4" />,
+    "Free Parking": <ParkingCircle className="w-4 h-4" />,
+    "Free Breakfast": <Utensils className="w-4 h-4" />,
+    "Free Dinner": <Soup className="w-4 h-4" />,
+    "Free Lunch": <Salad className="w-4 h-4" />,
+    "Swimming Pool": <Waves className="w-4 h-4" />,
+    Gym: <Dumbbell className="w-4 h-4" />,
+    Spa: <Bubbles className="w-4 h-4" />,
+    Bar: <Martini className="w-4 h-4" />,
+    Restaurant: <Utensils className="w-4 h-4" />,
+    "Room Service": <Bell className="w-4 h-4" />,
+    "24/7 Security": <Shield className="w-4 h-4" />,
+  };
+
+  const facilitiesLogo = {
+    Adapter: <Plug className="w-4 h-4" />,
+    "Air Conditioning": <Fan className="w-4 h-4" />,
+    "Free Parking": <Car className="w-4 h-4" />,
+    Desk: <Computer className="w-4 h-4" />,
+    Sofa: <Sofa className="w-4 h-4" />,
+    "Wake up service": <Bell className="w-4 h-4" />,
+    Linens: <Bed className="w-4 h-4" />,
+    Umbrella: <Umbrella className="w-4 h-4" />,
+  };
 
   if (isPending) return <SpinnerGlobal />;
 
   return (
-    <div>
-      <h1>{hotel?.name}</h1>
+    <div className="max-w-5xl mt-10 flex flex-col gap-5 mx-auto">
+      <div className="w-full">
+        <Image
+          className="w-full object-cover h-[300px]"
+          src={hotelImage}
+          alt="hotel-image"
+          width={1000}
+          height={1000}
+        />
+      </div>
+      <div className="flex flex-col gap-5">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-bold">{hotel?.name}</h1>
+            <p className="text-muted-foreground text-sm">Manila, Philippines</p>
+          </div>
+          <div>
+            <p>Overall: 5.0 Ratings</p>
+          </div>
+        </div>
+        <div>
+          <p>
+            Contrary to popular belief, Lorem Ipsum is not simply random text.
+            It has roots in a piece of classical Latin literature from 45 BC,
+            making it over 2000 years old. Richard McClintock, a Latin professor
+            at Hampden-Sydney College in Virginia, looked up one of the more
+            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+            going through the cites of the word in classical literature,
+            discovered the undoubtable source.
+          </p>
+        </div>
+        <div className=" grid grid-cols-4">
+          {hotel?.amenities.map((amenity: string) => (
+            <div
+              key={amenity}
+              className="flex text-muted-foreground text-sm items-center gap-2"
+            >
+              <p>{amenitiesLogo[amenity as keyof typeof amenitiesLogo]}</p>
+              <p>{amenity}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-10 pb-10">
+          <h1 className="font-bold text-3xl">Rooms</h1>
+          {hotel?.rooms.map((room: Room) => (
+            <Card className="w-md mt-5 h-fit" key={room.id}>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-1">
+                    <CardTitle className="text-lg">{room.name}</CardTitle>
+                    <CardDescription className="text-sm">
+                      {room.persons} Guests
+                    </CardDescription>
+                  </div>
+                  <div>
+                    <CardTitle>
+                      <p className="text-sm">4.0 Rating</p>
+                    </CardTitle>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-8">
+                <div className="">
+                  <Image
+                    src={hotelImage}
+                    alt="room-image"
+                    width={1000}
+                    height={1000}
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 text-center ">
+                  {room.facilities.map((facility: string) => (
+                    <div
+                      className="flex items-center gap-2 text-sm justify-center text-muted-foreground"
+                      key={facility}
+                    >
+                      <p>
+                        {
+                          facilitiesLogo[
+                            facility as keyof typeof facilitiesLogo
+                          ]
+                        }
+                      </p>
+                      <p>{facility}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-y py-3 flex justify-between items-center text-sm">
+                  <div className="">
+                    <p className="">
+                      Room Price:{" "}
+                      <span className="font-bold">
+                        {room.price}{" "}
+                        <span className="text-sm font-normal text-muted-foreground">
+                          {" "}
+                          /24hrs
+                        </span>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div>
+                    <p>
+                      Breakfast Price: <span className="font-bold">50</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex flex-col gap-3">
+                    <Label htmlFor="date" className="px-1">
+                      Select Date You Will Stay
+                    </Label>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          id="date"
+                          className="w-full justify-between font-normal text-sm"
+                        >
+                          {dateRange
+                            ? dateRange.from?.toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                              }) +
+                              "  -  " +
+                              dateRange.to?.toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                              })
+                            : "Select date"}
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="range"
+                          defaultMonth={dateRange?.from}
+                          selected={dateRange}
+                          onSelect={setDateRange}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <p>Do you want to add breakfast?</p>
+                </div>
+                <div className="">
+                  <Button className="w-full">Book Now</Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

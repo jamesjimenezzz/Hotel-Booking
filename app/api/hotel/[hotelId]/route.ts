@@ -12,7 +12,7 @@ export async function GET(
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const hotelId = params.hotelId;
+  const { hotelId } = await params;
 
   try {
     const hotel = await prisma.hotel.findUnique({
