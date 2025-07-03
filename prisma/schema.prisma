@@ -24,6 +24,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   hotels    Hotel[]
+  bookings Booking[]
   
 }
 
@@ -34,10 +35,14 @@ model Hotel {
   amenities   String[]
   images      String[]
   rooms       Room[]
+  country     String
+  state       String
+  city        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      String
   user        User     @relation(fields: [userId], references: [id])
+  bookings    Booking[]
 
   @@map("hotels")
 }
@@ -53,4 +58,27 @@ model Room {
   updatedAt   DateTime @updatedAt
   hotelId     String
   hotel       Hotel @relation(fields: [hotelId], references: [id])
+  bookings    Booking[]
+
+  @@map("rooms")
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  userId    String
+  userName  String
+  user      User @relation(fields: [userId], references: [id])
+  hotelId   String
+  hotel     Hotel @relation(fields: [hotelId], references: [id])
+  roomId    String
+  roomName  String
+  room      Room @relation(fields: [roomId], references:[id])
+  checkIn   DateTime
+  checkOut  DateTime
+  totalPrice Int
+  status String @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bookings")
 }

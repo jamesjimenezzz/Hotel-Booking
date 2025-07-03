@@ -58,8 +58,8 @@ const RoomCreatePage = () => {
         <Input
           className="mt-2 bg-black/20 border-gray-500 py-5"
           placeholder="Budget 2-bed Room..."
-          value={room.title}
-          onChange={(e) => setRoom({ ...room, title: e.target.value })}
+          value={room.name}
+          onChange={(e) => setRoom({ ...room, name: e.target.value })}
         />
       </div>
       <div className="grid grid-cols-3 gap-5  ">
@@ -107,26 +107,19 @@ const RoomCreatePage = () => {
                 <p className="p-2 text-sm outline rounded-lg">Add Picture</p>
               </label>
             )}
-            <Select
-              value={room.persons}
-              onValueChange={(value) => setRoom({ ...room, persons: value })}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Person" />
-              </SelectTrigger>
-
-              <SelectContent>
-                {Array.from({ length: 10 }).map((_, index) =>
-                  index === 0 ? (
-                    <SelectItem value={`${index + 1}`}>1 Person</SelectItem>
-                  ) : (
-                    <SelectItem value={`${index + 1}`}>
-                      {index + 1} Persons
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
+            <div>
+              <p>For how many guests?</p>
+              <div className="border-gray-300">
+                <input
+                  onChange={(e) =>
+                    setRoom({ ...room, persons: e.target.value })
+                  }
+                  value={room.persons}
+                  className="  border-gray-300 border-b-2 w-[50px]"
+                  type="text"
+                />
+              </div>
+            </div>
           </div>
         </div>
         {room.images.length > 0 ? (

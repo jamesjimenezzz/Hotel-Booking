@@ -2,6 +2,9 @@ import { create } from "zustand";
 
 export interface HotelData {
   name: string;
+  country: string;
+  state: string;
+  city: string;
   description: string;
   amenities: string[];
   images: File[];
@@ -26,6 +29,9 @@ interface formStore {
 export const useFormStore = create<formStore>((set) => ({
   hotel: {
     name: "",
+    country: "",
+    state: "",
+    city: "",
     description: "",
     amenities: [],
     images: [],
@@ -43,6 +49,9 @@ export const useFormStore = create<formStore>((set) => ({
     set({
       hotel: {
         name: "",
+        country: "",
+        state: "",
+        city: "",
         description: "",
         amenities: [],
         images: [],

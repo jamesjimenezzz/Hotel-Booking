@@ -21,6 +21,7 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useFormStore } from "@/store/formStore";
+import { Country, State, City } from "country-state-city";
 
 const HotelCreatePage = () => {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -68,14 +69,66 @@ const HotelCreatePage = () => {
         Submit your Hotel
       </h1>
       <div>
-        <h2 className="font-semibold text-xl">Hotel Title</h2>
+        <h2 className="font-semibold text-xl">Hotel Name</h2>
         <p className="text-sm text-gray-400">Provide your Hotel Name</p>
         <Input
           className="mt-2 bg-black/20 border-gray-500 py-5"
           placeholder="Beach Hotel"
-          value={hotel.title}
-          onChange={(e) => setHotel({ ...hotel, title: e.target.value })}
+          value={hotel.name}
+          onChange={(e) => setHotel({ ...hotel, name: e.target.value })}
         />
+      </div>
+      <div>
+        <div className="flex flex-col gap-6">
+          {/* Country */}
+          <div className="flex flex-col gap-2">
+            <h2 className="font-semibold text-xl">Country</h2>
+            <p className="text-sm text-gray-400">Select your Country</p>
+            <select
+              defaultValue={hotel.country}
+              onChange={(e) => setHotel({ ...hotel, country: e.target.value })}
+              className="border border-gray-300 rounded-md p-1.5"
+            >
+              {Country.getAllCountries().map((country) => (
+                <option key={country.isoCode} value={country.isoCode}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h2 className="font-semibold text-xl">State</h2>
+            <p className="text-sm text-gray-400">Select your State</p>
+            <select
+              defaultValue={hotel.state}
+              onChange={(e) => setHotel({ ...hotel, state: e.target.value })}
+              className="border border-gray-300 rounded-md p-1.5"
+            >
+              {State.getStatesOfCountry(hotel.country).map((state) => (
+                <option key={state.isoCode} value={state.isoCode}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h2 className="font-semibold text-xl">City</h2>
+            <p className="text-sm text-gray-400">Select your City</p>
+            <select
+              defaultValue={hotel.city}
+              onChange={(e) => setHotel({ ...hotel, city: e.target.value })}
+              className="border border-gray-300 rounded-md p-1.5"
+            >
+              {City.getCitiesOfState(hotel.country, hotel.state).map((city) => (
+                <option key={city.name} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
       <div>
         <h2 className="font-semibold text-xl">Hotel Description</h2>
