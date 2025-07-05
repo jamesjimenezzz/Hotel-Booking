@@ -26,7 +26,7 @@ import {
   Umbrella,
   ChevronDownIcon,
 } from "lucide-react";
-import { Room } from "@prisma/client";
+import { Hotel, Room } from "@prisma/client";
 import {
   Card,
   CardAction,
@@ -45,12 +45,29 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { DateRange } from "react-day-picker";
+import BookingModal from "@/components/BookingModal";
+import { useGetDisabledDates } from "@/hooks/useCreateHotel";
+import RoomCard from "@/components/RoomCard";
 const HotelDescription = () => {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(),
   });
   const [open, setOpen] = React.useState(false);
+  const [bookModal, setBookModal] = React.useState(false);
+  const dateFrom = dateRange?.from?.toISOString();
+  const dateTo = dateRange?.to?.toISOString();
+
+  const dateFromDisplay = dateRange?.from?.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const dateToDisplay = dateRange?.to?.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const { hotelId } = useParams();
   const { data: hotel, isPending } = useGetHotelById(hotelId as string);
@@ -127,122 +144,8 @@ const HotelDescription = () => {
         </div>
         <div className="mt-10 pb-10">
           <h1 className="font-bold text-3xl">Rooms</h1>
-          {hotel?.rooms.map((room: Room) => (
-            <Card className="w-md mt-5 h-fit" key={room.id}>
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-col gap-1">
-                    <CardTitle className="text-lg">{room.name}</CardTitle>
-                    <CardDescription className="text-sm">
-                      {room.persons} Guests
-                    </CardDescription>
-                  </div>
-                  <div>
-                    <CardTitle>
-                      <p className="text-sm">4.0 Rating</p>
-                    </CardTitle>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-8">
-                <div className="">
-                  <Image
-                    src={hotelImage}
-                    alt="room-image"
-                    width={1000}
-                    height={1000}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 text-center ">
-                  {room.facilities.map((facility: string) => (
-                    <div
-                      className="flex items-center gap-2 text-sm justify-center text-muted-foreground"
-                      key={facility}
-                    >
-                      <p>
-                        {
-                          facilitiesLogo[
-                            facility as keyof typeof facilitiesLogo
-                          ]
-                        }
-                      </p>
-                      <p>{facility}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="border-y py-3 flex justify-between items-center text-sm">
-                  <div className="">
-                    <p className="">
-                      Room Price:{" "}
-                      <span className="font-bold">
-                        {room.price}{" "}
-                        <span className="text-sm font-normal text-muted-foreground">
-                          {" "}
-                          /24hrs
-                        </span>
-                      </span>
-                    </p>
-                  </div>
-
-                  <div>
-                    <p>
-                      Breakfast Price: <span className="font-bold">50</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="date" className="px-1">
-                      Select Date You Will Stay
-                    </Label>
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id="date"
-                          className="w-full justify-between font-normal text-sm"
-                        >
-                          {dateRange
-                            ? dateRange.from?.toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              }) +
-                              "  -  " +
-                              dateRange.to?.toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              })
-                            : "Select date"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
-                        <Calendar
-                          mode="range"
-                          defaultMonth={dateRange?.from}
-                          selected={dateRange}
-                          onSelect={setDateRange}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <p>Do you want to add breakfast?</p>
-                </div>
-                <div className="">
-                  <Button className="w-full">Book Now</Button>
-                </div>
-              </CardContent>
-            </Card>
+          {hotel.rooms.map((room: Room) => (
+            <RoomCard key={room.id} room={room} hotel={hotel as Hotel} />
           ))}
         </div>
       </div>

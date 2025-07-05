@@ -22,16 +22,19 @@ export async function POST(req: NextRequest) {
     }
     const createdHotel = await prisma.hotel.create({
       data: {
-        name: hotel.title,
+        name: hotel.name,
         description: hotel.description,
         amenities: hotel.amenities,
+        country: hotel.country,
+        state: hotel.state,
+        city: hotel.city,
         images: images,
         userId: userId,
         rooms: {
           create: {
-            name: room.title,
+            name: room.name,
             facilities: room.facilities,
-            pictures: room.pictures,
+            pictures: room.images,
             persons: room.persons,
             price: room.price,
           },

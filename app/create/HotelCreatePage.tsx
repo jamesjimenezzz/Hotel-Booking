@@ -85,7 +85,7 @@ const HotelCreatePage = () => {
             <h2 className="font-semibold text-xl">Country</h2>
             <p className="text-sm text-gray-400">Select your Country</p>
             <select
-              defaultValue={hotel.country}
+              value={hotel.country}
               onChange={(e) => setHotel({ ...hotel, country: e.target.value })}
               className="border border-gray-300 rounded-md p-1.5"
             >
@@ -101,7 +101,7 @@ const HotelCreatePage = () => {
             <h2 className="font-semibold text-xl">State</h2>
             <p className="text-sm text-gray-400">Select your State</p>
             <select
-              defaultValue={hotel.state}
+              value={hotel.state}
               onChange={(e) => setHotel({ ...hotel, state: e.target.value })}
               className="border border-gray-300 rounded-md p-1.5"
             >
@@ -117,7 +117,7 @@ const HotelCreatePage = () => {
             <h2 className="font-semibold text-xl">City</h2>
             <p className="text-sm text-gray-400">Select your City</p>
             <select
-              defaultValue={hotel.city}
+              value={hotel.city}
               onChange={(e) => setHotel({ ...hotel, city: e.target.value })}
               className="border border-gray-300 rounded-md p-1.5"
             >

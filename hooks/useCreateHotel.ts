@@ -1,11 +1,17 @@
-import { createHotel, getHotels, getHotelById } from "@/app/api/createHotel";
+import {
+  createHotel,
+  getHotels,
+  getHotelById,
+  createBooking,
+  getDisabledDates,
+} from "@/app/api/createHotel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { HotelData, RoomData } from "@/store/formStore";
+import { BookingData } from "@/types";
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const useCreateHotel = () => {
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
   return useMutation({
     mutationFn: async ({
       hotel,
@@ -31,5 +37,22 @@ export const useGetHotelById = (hotelId: string) => {
   return useQuery({
     queryKey: ["hotel", hotelId],
     queryFn: () => getHotelById(hotelId),
+  });
+};
+
+export const useCreateBooking = () => {
+  return useMutation({
+    mutationFn: async (booking: BookingData) => {
+      await sleep(1200);
+      return createBooking(booking);
+    },
+  });
+};
+
+export const useGetDisabledDates = (roomId: string) => {
+  return useQuery({
+    queryKey: ["disabled-dates", roomId],
+    queryFn: () => getDisabledDates(roomId),
+    enabled: !!roomId,
   });
 };

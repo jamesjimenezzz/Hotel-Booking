@@ -15,3 +15,17 @@ export interface Room {
   images: File[];
   price: string;
 }
+
+export interface BookingData {
+  roomId: string;
+  hotelId: string;
+  roomName: string;
+  hotelName: string;
+  checkInDate: string;
+  checkOutDate: string;
+  roomPrice: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  numberOfGuests: string;
+}
